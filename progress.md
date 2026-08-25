@@ -25,5 +25,20 @@
 - Verified the Firstmate repository is publicly reachable with `git ls-remote`.
 - Updated `findings.md` and `docs/host-readiness.md` with evidence and blockers.
 
+### Installation progress
+- Audited the current Firstmate `main` toolchain requirements and backend requirements.
+- Installed Firstmate npm tools (`tasks-axi`, `quota-axi`, `gh-axi`, `chrome-devtools-axi`, `lavish-axi`) on OVH, ZimaOS, and Mac mini.
+- Confirmed Pi was already installed on ZimaOS at `/DATA/bcharney234/.nvm/versions/node/v24.18.0/bin/pi` version 0.82.1; the initial install attempt stopped safely on an existing-file collision.
+- Installed Treehouse v2.0.1 from Firstmate's checksum-pinned official installer on all three hosts.
+- Installed official no-mistakes v1.57.0 on all three hosts; this satisfies Firstmate's 1.31.2 minimum, unlike the npm package version.
+- Installed GitHub CLI: OVH apt package 2.4.0, ZimaOS verified official v2.98.0 Linux amd64 archive with checksum into user-local bin, Mac Homebrew 2.98.0.
+- Installed OVH jq 1.6; ZimaOS and Mac already had jq.
+- Ran Firstmate's read-only/local-only `fm-bootstrap.sh` detector with `FM_BACKEND=herdr` and isolated temporary `FM_HOME` on all three hosts; no missing-tool lines were emitted and all exited successfully.
+- No Firstmate captain/secondmate homes were created and no existing Herdr/Moshi services were restarted.
+- Noted OVH apt's pending kernel update; no reboot performed.
+- The local Pi preflight was attempted but failed because Docker/Redis is unavailable locally; this is unrelated to host installation.
+
 ### Next
-- Resolve ZimaOS Pi launchability and identify the status of `treehouse`/`tasks-axi` from Firstmate's actual requirements before installing anything.
+- Verify host GitHub/provider authentication without exposing credentials.
+- Verify harmless Pi launch/exit under each intended account.
+- Create the isolated Firstmate code root and profile only after those checks.

@@ -4,9 +4,9 @@ Last verified: 2026-08-25. These results are from direct non-interactive SSH che
 
 | Host | Pi | Herdr | Moshi hook | Required tools | Readiness |
 |---|---|---|---|---|---|
-| OVH VPS (`ovhvps`) | `/home/ubuntu/.local/bin/pi` 0.84.1; running processes observed | `/home/ubuntu/.local/bin/herdr` 0.8.0, protocol 19, server running | `/home/ubuntu/.local/bin/moshi-hook` 0.3.0, running | Git present; jq/treehouse/tasks-axi/gh absent | Partial |
-| ZimaOS (`zimaos`) | Not found in probed paths or processes | `/DATA/bcharney234/.local/bin/herdr` 0.8.2, protocol 20, server running | `/DATA/bcharney234/.local/bin/moshi-hook` 0.3.0, running | Git and jq present; treehouse/tasks-axi/gh absent | Blocked for Pi secondmate |
-| Mac mini (`macmini`) | `/opt/homebrew/bin/pi` 0.73.1; running process observed | `/opt/homebrew/bin/herdr` 0.8.2, protocol 20, server running | `/opt/homebrew/opt/moshi-hook/bin/moshi-hook` 0.3.1, running | Git and jq present; treehouse/tasks-axi/gh absent in SSH PATH | Partial |
+| OVH VPS (`ovhvps`) | `/home/ubuntu/.local/bin/pi` 0.84.1; running processes observed | `/home/ubuntu/.local/bin/herdr` 0.8.0, protocol 19, server running | `/home/ubuntu/.local/bin/moshi-hook` 0.3.0, running | Full Firstmate detector toolchain; jq 1.6; gh 2.4.0 | Ready for isolated provisioning; auth open |
+| ZimaOS (`zimaos`) | `/DATA/bcharney234/.nvm/versions/node/v24.18.0/bin/pi` 0.82.1; installed before this phase | `/DATA/bcharney234/.local/bin/herdr` 0.8.2, protocol 20, server running | `/DATA/bcharney234/.local/bin/moshi-hook` 0.3.0, running | Full Firstmate detector toolchain; jq 1.7.1; gh 2.98.0 | Ready for isolated provisioning; auth open |
+| Mac mini (`macmini`) | `/opt/homebrew/bin/pi` 0.73.1; running process observed | `/opt/homebrew/bin/herdr` 0.8.2, protocol 20, server running | `/opt/homebrew/opt/moshi-hook/bin/moshi-hook` 0.3.1, running | Full Firstmate detector toolchain; jq 1.8.2; gh 2.98.0 | Ready for isolated provisioning; npm environment warning/auth open |
 
 ## Moshi evidence
 
@@ -17,9 +17,8 @@ Last verified: 2026-08-25. These results are from direct non-interactive SSH che
 
 ## Required next checks
 
-1. Resolve ZimaOS Pi installation/launchability.
-2. Verify a harmless Pi launch/exit under each intended account.
-3. Check whether `treehouse` and `tasks-axi` are actual Firstmate prerequisites before installing anything.
-4. Verify provider authentication and repository access without exposing secrets.
-5. Create an isolated Firstmate code root on the selected captain only.
-6. Compare Herdr versions and plan normalization if required.
+1. Verify a harmless Pi launch/exit under each intended account.
+2. Verify provider authentication and repository access without exposing secrets.
+3. Create an isolated Firstmate code root on the selected captain only.
+4. Compare Herdr versions and plan normalization if required.
+5. Keep the Mac npm environment warning from leaking into the Firstmate launch context.

@@ -25,12 +25,24 @@ All checks below were run through non-interactive `ssh <alias>`, using explicit 
 
 Non-interactive PATHs omit installed user-local/Homebrew binaries on OVH, ZimaOS, and Mac; all future launch commands must use explicit paths or a controlled environment file.
 
+### Installation and post-install verification — 2026-08-25
+
+Installed without overwriting existing Herdr/Moshi services:
+
+| Host | Changes | Verified result |
+|---|---|---|
+| `ovhvps` | Firstmate npm tools, Treehouse v2.0.1, GitHub CLI 2.4.0, jq 1.6; no-mistakes binary installer v1.57.0 | Full toolchain present; Herdr and Pi preserved. |
+| `zimaos` | Used existing NVM Node 24.18.0 and existing Pi 0.82.1; installed Firstmate npm tools, Treehouse v2.0.1, no-mistakes v1.57.0, GitHub CLI 2.98.0 user-local | Full runtime/toolchain present; Herdr and Moshi preserved. |
+| `macmini` | Installed Firstmate npm tools, Treehouse v2.0.1, no-mistakes v1.57.0, GitHub CLI 2.98.0; preserved existing Homebrew Pi/Herdr | Full runtime/toolchain present; NVM emits an existing npmrc prefix warning. |
+
+The Firstmate `fm-bootstrap.sh` detector was run in read-only/local-only mode with `FM_BACKEND=herdr` and an isolated temporary `FM_HOME` on all three hosts. It emitted no missing-tool lines and exited successfully on each host.
+
 ### Remaining host uncertainties
-- ZimaOS Pi is not installed or not discoverable for the intended account; do not proceed as a Pi secondmate until resolved.
-- `treehouse` and `tasks-axi` are absent from all three checked PATHs; determine whether they are Firstmate prerequisites, bundled tools, or optional integrations before installing anything.
-- `gh` is not available on the remote hosts; GitHub access may use SSH or a host-specific credential mechanism, but it is not yet verified.
-- Provider authentication is not yet independently verified on each host.
+- GitHub CLI is installed on all three hosts, but `gh auth status`/provider authentication has not been independently verified on each host. OVH explicitly reports no logged-in GitHub host; ZimaOS and Mac credentials may exist but need checking without exposing tokens.
 - No Firstmate code root was found on OVH or ZimaOS; the Mac result is the project repository itself, not evidence of a Firstmate checkout.
+- The Mac NVM environment has a pre-existing npm `globalconfig`/prefix conflict warning; installations succeeded through explicit Homebrew npm, but the launch environment should be standardized before Firstmate provisioning.
+- OVH apt reported a pending kernel update (`5.15.0-190-generic`) while the running kernel remains `5.15.0-186-generic`; no reboot was performed.
+- Local Pi preflight remains blocked by an unrelated Docker/Redis requirement; this does not affect the host-local toolchain detector result.
 
 ### Architecture conclusion
 Moshi does not replace Firstmate or Herdr. The intended layers are:
@@ -42,6 +54,7 @@ Moshi does not replace Firstmate or Herdr. The intended layers are:
 
 ### Important risks
 - Herdr versions differ between OVH (0.8.0) and ZimaOS/Mac (0.8.2); normalize only through an approved, reversible change.
+- `no-mistakes` must be installed from its official binary installer; the npm package version 0.51.3 is below Firstmate's 1.31.2 floor. Official v1.57.0 is now installed on all three hosts.
 - Non-interactive SSH environments do not expose all interactive PATH entries.
 - Mobile connectivity is not directly proven by host shell checks; host-side pairing and mirror evidence is strong but phone-side live state remains an explicit acceptance test.
 - Do not treat an active relay or sidecar as proof that the Pi CLI is launchable for Firstmate.

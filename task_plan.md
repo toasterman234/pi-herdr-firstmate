@@ -48,5 +48,8 @@ Evaluate and, only after staged verification, operate a Firstmate fleet with an 
 - [x] Inventory `jq`, `treehouse`, `tasks-axi`, Git, and GitHub CLI presence.
 - [ ] Verify repository access and provider authentication without exposing secrets.
 - [x] Update the host readiness matrix with command evidence.
-- [ ] Resolve ZimaOS Pi launchability before provisioning a ZimaOS secondmate.
-- [ ] Determine whether `treehouse` and `tasks-axi` are mandatory Firstmate prerequisites.
+- [x] Resolve ZimaOS Pi launchability before provisioning a ZimaOS secondmate.
+- [x] Determine whether `treehouse` and `tasks-axi` are mandatory Firstmate prerequisites.
+- [x] Install the documented Firstmate runtime/toolchain on all three hosts.
+- [ ] Verify host GitHub/provider authentication without exposing credentials.
+- [ ] Verify harmless Pi launch/exit under each intended account.
