@@ -4,10 +4,10 @@
 Evaluate and, only after staged verification, operate a Firstmate fleet with an isolated Pi profile, Herdr host sessions, Moshi mobile access, and hosts on OVH VPS, ZimaOS, and Mac mini. Preserve the existing Central Ops/Pi deployment and avoid fleet cutover.
 
 ## Current phase
-**Phase 1 — project scaffold and publication** (in progress)
+**Phase 2 — host toolchain and non-interactive launch verification** (in progress)
 
 ## Phases
-- [ ] Phase 1: Scaffold repository, capture baseline, verify docs, publish GitHub repository.
+- [x] Phase 1: Scaffold repository, capture baseline, verify docs, publish GitHub repository.
 - [ ] Phase 2: Verify host toolchains and non-interactive launch contexts.
 - [ ] Phase 3: Provision isolated Pi profile and Firstmate captain home.
 - [ ] Phase 4: Pilot one disposable remote secondmate.
@@ -36,8 +36,15 @@ Evaluate and, only after staged verification, operate a Firstmate fleet with an 
 | 1 | RLM unavailable: Ax dependency missing in extension directory. | Fell back to inline plan; no project files were affected by the failed call. |
 
 ## Acceptance criteria for Phase 1
-- Repository exists locally with a clean, coherent scaffold.
-- Baseline host facts and uncertainties are documented with verification date.
-- Isolated profile and Firstmate paths are documented but not activated.
-- Local validation passes.
-- GitHub repository is published and the remote is verified.
+- Repository exists locally with a clean, coherent scaffold. **Met.**
+- Baseline host facts and uncertainties are documented with verification date. **Met.**
+- Isolated profile and Firstmate paths are documented but not activated. **Met.**
+- Local validation passes. **Met: `scripts/doctor.sh`.**
+- GitHub repository is published and the remote is verified. **Met: `gh repo view` and clean tracking status.**
+
+## Phase 2 checks
+- [ ] Resolve exact Pi and Herdr binaries for each intended account.
+- [ ] Verify harmless `--version` and status commands through non-interactive SSH.
+- [ ] Inventory `jq`, `treehouse`, `tasks-axi`, Git, and Firstmate dependencies.
+- [ ] Verify repository access and provider authentication without exposing secrets.
+- [ ] Update the host readiness matrix with command evidence.
