@@ -1,0 +1,24 @@
+# Secrets and live state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.token
+*.secret
+**/credentials/**
+**/secrets/**
+**/pairing/**
+**/sessions/**
+
+# Local runtime/state
+.pi/
+.firstmate/
+herdr-state/
+logs/
+*.log
+.DS_Store
+
+# Editor/OS
+.vscode/
+.idea/

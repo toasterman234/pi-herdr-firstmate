@@ -1,0 +1,18 @@
+# Planning inventory only. Do not put passwords, private keys, or pairing secrets here.
+project: pi-herdr-firstmate
+hosts:
+  ovh:
+    ssh_alias: ovhvps
+    role: candidate-captain-or-secondmate
+    herdr_binary: /home/ubuntu/.local/bin/herdr
+    profile_owner: ubuntu
+  zima:
+    ssh_alias: zimaos
+    role: candidate-secondmate
+    herdr_binary: /DATA/bcharney234/.local/bin/herdr
+    profile_owner: bcharney234
+  mac:
+    ssh_alias: macmini
+    role: Moshi-and-herdr-mirror-bridge; candidate-secondmate
+    herdr_binary: unresolved
+    profile_owner: unresolved
