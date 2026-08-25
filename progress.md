@@ -38,7 +38,18 @@
 - Noted OVH apt's pending kernel update; no reboot performed.
 - The local Pi preflight was attempted but failed because Docker/Redis is unavailable locally; this is unrelated to host installation.
 
+### Phase 2/3 completion
+- Verified public Git access to both the Firstmate repository and this project repository from OVH, ZimaOS, and Mac mini.
+- Verified GitHub CLI auth without exposing credentials: ZimaOS is authenticated as `toasterman234`; OVH has no active GitHub login; Mac mini has an invalid stored token.
+- Verified harmless Pi `--help` launch/exit with isolated state paths on OVH, ZimaOS, and Mac mini. Mac was run through `/opt/homebrew/bin/pi` to avoid the pre-existing NVM npmrc warning.
+- Selected OVH as the initial captain host because it has Pi, Herdr, the complete toolchain, and can host the isolated captain without touching Central Ops.
+- Created isolated OVH Firstmate code root: `/home/ubuntu/firstmate-fleet/firstmate`.
+- Created isolated captain home: `/home/ubuntu/.firstmate/captain`.
+- Created isolated Pi profile/session paths: `/home/ubuntu/.pi/firstmate-fleet` and `/home/ubuntu/.pi/firstmate-fleet/sessions`.
+- Ran isolated `fm-bootstrap.sh` with `FM_BACKEND=herdr`, `FM_BOOTSTRAP_NETWORK=skip`, and verified the home markers and Pi help output.
+- No live secondmate was provisioned, no watcher was armed, and no existing Central Ops/Pi/Herdr/Moshi state was changed.
+
 ### Next
-- Verify host GitHub/provider authentication without exposing credentials.
-- Verify harmless Pi launch/exit under each intended account.
-- Create the isolated Firstmate code root and profile only after those checks.
+- Repair or explicitly defer OVH and Mac GitHub authentication.
+- Run the isolated captain through the documented Pi trust/extension launch path.
+- Run `fm-remote-doctor.sh` and provision one disposable remote secondmate, preferably ZimaOS, only after the captain launch is validated.

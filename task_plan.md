@@ -4,12 +4,12 @@
 Evaluate and, only after staged verification, operate a Firstmate fleet with an isolated Pi profile, Herdr host sessions, Moshi mobile access, and hosts on OVH VPS, ZimaOS, and Mac mini. Preserve the existing Central Ops/Pi deployment and avoid fleet cutover.
 
 ## Current phase
-**Phase 2 — host toolchain and non-interactive launch verification** (in progress)
+**Phase 3 — isolated profile and Firstmate captain provisioning** (in progress)
 
 ## Phases
 - [x] Phase 1: Scaffold repository, capture baseline, verify docs, publish GitHub repository.
-- [ ] Phase 2: Verify host toolchains and non-interactive launch contexts.
-- [ ] Phase 3: Provision isolated Pi profile and Firstmate captain home.
+- [x] Phase 2: Verify host toolchains and non-interactive launch contexts.
+- [x] Phase 3: Provision isolated Pi profile and Firstmate captain home.
 - [ ] Phase 4: Pilot one disposable remote secondmate.
 - [ ] Phase 5: Exercise routing, disconnect, restart, outage, and recovery scenarios.
 - [ ] Phase 6: Add remaining hosts only after pilot acceptance.
@@ -46,7 +46,7 @@ Evaluate and, only after staged verification, operate a Firstmate fleet with an 
 - [x] Resolve exact Pi and Herdr binaries for each intended account where present.
 - [x] Verify harmless `--version` and Herdr status commands through non-interactive SSH.
 - [x] Inventory `jq`, `treehouse`, `tasks-axi`, Git, and GitHub CLI presence.
-- [ ] Verify repository access and provider authentication without exposing secrets.
+- [x] Verify repository access without exposing secrets; provider authentication remains host-specific and incomplete.
 - [x] Update the host readiness matrix with command evidence.
 - [x] Resolve ZimaOS Pi launchability before provisioning a ZimaOS secondmate.
 - [x] Determine whether `treehouse` and `tasks-axi` are mandatory Firstmate prerequisites.

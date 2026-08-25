@@ -37,10 +37,20 @@ Installed without overwriting existing Herdr/Moshi services:
 
 The Firstmate `fm-bootstrap.sh` detector was run in read-only/local-only mode with `FM_BACKEND=herdr` and an isolated temporary `FM_HOME` on all three hosts. It emitted no missing-tool lines and exited successfully on each host.
 
+### Authentication and isolated provisioning — 2026-08-25
+
+- Public `git ls-remote` access to both `kunchenguid/firstmate` and `toasterman234/pi-herdr-firstmate` passed from OVH, ZimaOS, and Mac mini.
+- `gh auth status` is host-specific: ZimaOS is authenticated as `toasterman234` with repo-capable scopes; OVH has no logged-in GitHub host; Mac mini's stored `toasterman234` token is invalid. No token values were printed or stored in this repository.
+- Harmless Pi `--help` launch/exit passed with isolated temporary state on all three hosts. The Mac check used `/opt/homebrew/bin/pi` directly to avoid the existing NVM npmrc prefix warning.
+- OVH was selected as the initial captain host. The isolated Firstmate code root is `/home/ubuntu/firstmate-fleet/firstmate`; the captain home is `/home/ubuntu/.firstmate/captain`; the Pi profile is `/home/ubuntu/.pi/firstmate-fleet` with sessions below it.
+- Isolated OVH `fm-bootstrap.sh` ran with `FM_BACKEND=herdr`, `FM_BOOTSTRAP_NETWORK=skip`, and `FM_BOOTSTRAP_DETECT_ONLY=1` verification passed. The home contains only Firstmate-generated bootstrap markers/config at this point.
+
 ### Remaining host uncertainties
-- GitHub CLI is installed on all three hosts, but `gh auth status`/provider authentication has not been independently verified on each host. OVH explicitly reports no logged-in GitHub host; ZimaOS and Mac credentials may exist but need checking without exposing tokens.
-- No Firstmate code root was found on OVH or ZimaOS; the Mac result is the project repository itself, not evidence of a Firstmate checkout.
-- The Mac NVM environment has a pre-existing npm `globalconfig`/prefix conflict warning; installations succeeded through explicit Homebrew npm, but the launch environment should be standardized before Firstmate provisioning.
+- OVH and Mac provider/GitHub authentication must be repaired or explicitly deferred before operations requiring authenticated forge access.
+- The isolated captain has not yet been launched interactively through Pi's trust/extension path; only the harmless CLI help path is verified.
+- No Firstmate watcher is armed and no live secondmate has been provisioned.
+- No Firstmate code root was created on ZimaOS or Mac; this is intentional until the disposable pilot host is selected.
+- The Mac NVM environment has a pre-existing npm `globalconfig`/prefix conflict warning; the explicit Homebrew launch path avoids it.
 - OVH apt reported a pending kernel update (`5.15.0-190-generic`) while the running kernel remains `5.15.0-186-generic`; no reboot was performed.
 - Local Pi preflight remains blocked by an unrelated Docker/Redis requirement; this does not affect the host-local toolchain detector result.
 
