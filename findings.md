@@ -45,11 +45,17 @@ The Firstmate `fm-bootstrap.sh` detector was run in read-only/local-only mode wi
 - OVH was selected as the initial captain host. The isolated Firstmate code root is `/home/ubuntu/firstmate-fleet/firstmate`; the captain home is `/home/ubuntu/.firstmate/captain`; the Pi profile is `/home/ubuntu/.pi/firstmate-fleet` with sessions below it.
 - Isolated OVH `fm-bootstrap.sh` ran with `FM_BACKEND=herdr`, `FM_BOOTSTRAP_NETWORK=skip`, and `FM_BOOTSTRAP_DETECT_ONLY=1` verification passed. The home contains only Firstmate-generated bootstrap markers/config at this point.
 
+### Phase 4 readiness — 2026-08-25
+
+- OVH `fm-remote-doctor.sh --fix` repaired the automatable remote-secondmate prerequisites: the Linux `dev.firstmate.remote-job` worker, its tool probe, the dedicated Herdr `fm-remote` session, and the Firstmate-owned `/home/ubuntu/.local/bin/fm-remote-entrypoint.sh` link.
+- A subsequent OVH doctor check reported `ok: remote second-mate readiness confirmed on this host` for every required check.
+- ZimaOS has Pi, tasks-axi, and quota-axi under `/DATA/bcharney234/.nvm/versions/node/v24.18.0/bin`; bare non-interactive SSH does not expose Node, so direct execution of those shims fails until the NVM bin directory is included. Firstmate's composed remote PATH is expected to address this; it has not yet been proven through `fm-on.sh`.
+
 ### Remaining host uncertainties
-- OVH and Mac provider/GitHub authentication must be repaired or explicitly deferred before operations requiring authenticated forge access.
+- OVH and Mac provider/GitHub authentication must be repaired or explicitly deferred before operations requiring authenticated forge access; no new authorization flow was attempted.
 - The isolated captain has not yet been launched interactively through Pi's trust/extension path; only the harmless CLI help path is verified.
-- No Firstmate watcher is armed and no live secondmate has been provisioned.
-- No Firstmate code root was created on ZimaOS or Mac; this is intentional until the disposable pilot host is selected.
+- No live secondmate was provisioned and no watcher was armed.
+- No Firstmate code root was created on ZimaOS or Mac; this remains intentional until the disposable pilot host is selected.
 - The Mac NVM environment has a pre-existing npm `globalconfig`/prefix conflict warning; the explicit Homebrew launch path avoids it.
 - OVH apt reported a pending kernel update (`5.15.0-190-generic`) while the running kernel remains `5.15.0-186-generic`; no reboot was performed.
 - Local Pi preflight remains blocked by an unrelated Docker/Redis requirement; this does not affect the host-local toolchain detector result.

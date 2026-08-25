@@ -49,7 +49,13 @@
 - Ran isolated `fm-bootstrap.sh` with `FM_BACKEND=herdr`, `FM_BOOTSTRAP_NETWORK=skip`, and verified the home markers and Pi help output.
 - No live secondmate was provisioned, no watcher was armed, and no existing Central Ops/Pi/Herdr/Moshi state was changed.
 
+### Phase 4 readiness progress
+- Ran `fm-remote-doctor.sh --fix` on the isolated OVH Firstmate root. It installed/reloaded the Linux `dev.firstmate.remote-job` worker, started the dedicated Herdr `fm-remote` session, and created the Firstmate-owned `fm-remote-entrypoint.sh` symlink.
+- Re-ran the doctor in check mode; all remote-secondmate checks passed, including worker probe, Herdr server, and entrypoint link.
+- Confirmed ZimaOS has Pi, tasks-axi, and quota-axi under NVM, but non-interactive SSH does not load NVM. A pilot route must use Firstmate's composed remote PATH or an explicit NVM environment; no ZimaOS mutation was made in this step.
+- No remote secondmate was provisioned yet. No GitHub login flow was attempted because OVH has no usable existing credential and Mac's stored token is invalid; repairing those requires a new interactive authorization.
+
 ### Next
-- Repair or explicitly defer OVH and Mac GitHub authentication.
-- Run the isolated captain through the documented Pi trust/extension launch path.
-- Run `fm-remote-doctor.sh` and provision one disposable remote secondmate, preferably ZimaOS, only after the captain launch is validated.
+- Validate the isolated captain's actual interactive Pi trust/extension path.
+- Provision one disposable remote secondmate on ZimaOS only after its remote doctor is run through the captain's `fm-on.sh` route.
+- Exercise send/reply and teardown before adding any other host.
