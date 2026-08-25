@@ -49,13 +49,16 @@ The Firstmate `fm-bootstrap.sh` detector was run in read-only/local-only mode wi
 
 - OVH `fm-remote-doctor.sh --fix` repaired the automatable remote-secondmate prerequisites: the Linux `dev.firstmate.remote-job` worker, its tool probe, the dedicated Herdr `fm-remote` session, and the Firstmate-owned `/home/ubuntu/.local/bin/fm-remote-entrypoint.sh` link.
 - A subsequent OVH doctor check reported `ok: remote second-mate readiness confirmed on this host` for every required check.
-- ZimaOS has Pi, tasks-axi, and quota-axi under `/DATA/bcharney234/.nvm/versions/node/v24.18.0/bin`; bare non-interactive SSH does not expose Node, so direct execution of those shims fails until the NVM bin directory is included. Firstmate's composed remote PATH is expected to address this; it has not yet been proven through `fm-on.sh`.
+- ZimaOS has Pi, tasks-axi, and quota-axi under `/DATA/bcharney234/.nvm/versions/node/v24.18.0/bin`; bare non-interactive SSH does not expose Node. Firstmate's composed remote PATH was verified during the isolated ZimaOS doctor run: it resolved `tasks-axi` and the Pi-capable harness from the NVM installation.
 
 ### Remaining host uncertainties
 - OVH and Mac provider/GitHub authentication must be repaired or explicitly deferred before operations requiring authenticated forge access; no new authorization flow was attempted.
 - The isolated captain has not yet been launched interactively through Pi's trust/extension path; only the harmless CLI help path is verified.
-- No live secondmate was provisioned and no watcher was armed.
-- No Firstmate code root was created on ZimaOS or Mac; this remains intentional until the disposable pilot host is selected.
+- One disposable no-projects ZimaOS secondmate was provisioned at `/DATA/bcharney234/.firstmate/secondmates/zimaos-pilot`. Its captain route is registered in the isolated OVH captain home. No watcher or production project was started.
+- The remote route and Herdr endpoint were created, but the Pi endpoint died at launch on ZimaOS. The installed Pi dependency `undici` throws `webidl.util.markAsUncloneable is not a function` under the remote worker's Node `v20.20.2`; the host's Pi is installed under Node `v24.18.0`. This is a runtime mismatch, not a Firstmate routing failure.
+- A Firstmate-safe explicit Node wrapper remains at `/DATA/bcharney234/.local/bin/node`; the temporary SSH rc PATH mutation used to test it was rolled back. The remote worker resolves that wrapper as Node `v24.18.0`, and `pi --version` returns `0.82.1` through the worker PATH.
+- The Herdr `fm-remote` pane does not inherit that worker PATH: its captured launch output shows Pi's NVM path followed by `Node.js v20.20.2` and the undici `markAsUncloneable` crash. The disposable endpoint therefore remains dead until Herdr's pane environment is given the Node 24 bin directory or Pi is installed against Node 20.
+- An isolated Firstmate code root now exists on ZimaOS at `/DATA/bcharney234/firstmate-fleet/firstmate`, with readiness-only home state under `/DATA/bcharney234/.firstmate/remote-readiness`. No secondmate home or captain registry route has been created yet.
 - The Mac NVM environment has a pre-existing npm `globalconfig`/prefix conflict warning; the explicit Homebrew launch path avoids it.
 - OVH apt reported a pending kernel update (`5.15.0-190-generic`) while the running kernel remains `5.15.0-186-generic`; no reboot was performed.
 - Local Pi preflight remains blocked by an unrelated Docker/Redis requirement; this does not affect the host-local toolchain detector result.

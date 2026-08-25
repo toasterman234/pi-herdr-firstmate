@@ -55,7 +55,18 @@
 - Confirmed ZimaOS has Pi, tasks-axi, and quota-axi under NVM, but non-interactive SSH does not load NVM. A pilot route must use Firstmate's composed remote PATH or an explicit NVM environment; no ZimaOS mutation was made in this step.
 - No remote secondmate was provisioned yet. No GitHub login flow was attempted because OVH has no usable existing credential and Mac's stored token is invalid; repairing those requires a new interactive authorization.
 
+### Follow-up pilot progress
+- Created the isolated ZimaOS Firstmate checkout at `/DATA/bcharney234/firstmate-fleet/firstmate` and isolated readiness home at `/DATA/bcharney234/.firstmate/remote-readiness`.
+- Ran ZimaOS bootstrap plus `fm-remote-doctor.sh --fix` and a check pass. The composed child PATH found the NVM-installed runtime and Firstmate tools; the Linux worker, `fm-remote` Herdr session, and fixed entrypoint all passed.
+- The provisioning SSH command timed out only after both doctor passes had reported success. A fresh post-timeout verification then passed: the isolated checkout, entrypoint, Linux worker/probe, Herdr `fm-remote`, and required tools remain healthy.
+
 ### Next
-- Validate the isolated captain's actual interactive Pi trust/extension path.
-- Provision one disposable remote secondmate on ZimaOS only after its remote doctor is run through the captain's `fm-on.sh` route.
+- Verify the ZimaOS isolated checkout, worker, Herdr `fm-remote`, and entrypoint after the timeout.
+- Validate the OVH captain's actual interactive Pi trust/extension path.
+- Create and fill one disposable secondmate charter, then provision only that ZimaOS route.
+- Provisioned one disposable no-projects ZimaOS remote secondmate at `/DATA/bcharney234/.firstmate/secondmates/zimaos-pilot`; the captain route records the remote root/home and the command reported `projects=0`.
+- Verified the remote home contains `.fm-secondmate-home`, `.fm-secondmate-parent`, `AGENTS.md`, and isolated Firstmate state. No production project clone was created.
+- Attempted the disposable Pi secondmate launch through the real remote route. The Herdr endpoint was created but immediately died because the remote worker invoked Pi with Node `v20.20.2`, while ZimaOS Pi's installed undici dependency requires the Node 24 runtime where Pi is installed. No send/reply or teardown test was run against a live agent.
+- Added and verified an explicit `/DATA/bcharney234/.local/bin/node` wrapper for the Node 24 binary; restored the temporary SSH rc mutation after testing. The remote worker environment resolves the wrapper as Node `v24.18.0` and Pi `0.82.1`.
+- Captured the actual Herdr `fm-remote` pane. The Pi command uses the NVM Pi path, but its `#!/usr/bin/env node` shebang resolves Node `v20.20.2` inside the Herdr pane, causing the same undici crash. The remaining defect is Herdr pane PATH inheritance, not remote worker PATH discovery.
 - Exercise send/reply and teardown before adding any other host.
