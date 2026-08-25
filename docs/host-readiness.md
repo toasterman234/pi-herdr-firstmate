@@ -1,12 +1,12 @@
 # Host Readiness
 
-Last verified: 2026-08-25. These results are from direct host/process/path checks and should be repeated from the intended Firstmate launch context.
+Last verified: 2026-08-25. These results are from direct non-interactive SSH checks, including explicit absolute binary probes.
 
-| Host | Pi | Herdr | Moshi hook | Readiness |
-|---|---|---|---|---|
-| OVH VPS (`ovhvps`) | Running `/home/ubuntu/.local/bin/pi` processes observed | 0.8.0, protocol 19, server running | Running | Partial; toolchain/auth/profile still open |
-| ZimaOS (`zimaos`) | Not found in current checks | 0.8.2, protocol 20, server running | Running | Partial; Pi launchability/toolchain/auth open |
-| Mac mini (`macmini`) | Related Pi services observed; CLI launchability unresolved | Herdr server/CLI via intended SSH context unresolved; relay and mirror active | Running locally | Partial; intended SSH runtime unresolved |
+| Host | Pi | Herdr | Moshi hook | Required tools | Readiness |
+|---|---|---|---|---|---|
+| OVH VPS (`ovhvps`) | `/home/ubuntu/.local/bin/pi` 0.84.1; running processes observed | `/home/ubuntu/.local/bin/herdr` 0.8.0, protocol 19, server running | `/home/ubuntu/.local/bin/moshi-hook` 0.3.0, running | Git present; jq/treehouse/tasks-axi/gh absent | Partial |
+| ZimaOS (`zimaos`) | Not found in probed paths or processes | `/DATA/bcharney234/.local/bin/herdr` 0.8.2, protocol 20, server running | `/DATA/bcharney234/.local/bin/moshi-hook` 0.3.0, running | Git and jq present; treehouse/tasks-axi/gh absent | Blocked for Pi secondmate |
+| Mac mini (`macmini`) | `/opt/homebrew/bin/pi` 0.73.1; running process observed | `/opt/homebrew/bin/herdr` 0.8.2, protocol 20, server running | `/opt/homebrew/opt/moshi-hook/bin/moshi-hook` 0.3.1, running | Git and jq present; treehouse/tasks-axi/gh absent in SSH PATH | Partial |
 
 ## Moshi evidence
 
@@ -17,9 +17,9 @@ Last verified: 2026-08-25. These results are from direct host/process/path check
 
 ## Required next checks
 
-1. Resolve each host's non-interactive PATH and exact Pi binary.
-2. Verify `pi --version` and a harmless launch/exit under the intended account.
-3. Verify `herdr --version` and `herdr status --json` under the same context.
-4. Check `jq`, `treehouse`, `tasks-axi`, Git, and Firstmate dependencies.
-5. Verify provider authentication and repository access without exposing secrets.
+1. Resolve ZimaOS Pi installation/launchability.
+2. Verify a harmless Pi launch/exit under each intended account.
+3. Check whether `treehouse` and `tasks-axi` are actual Firstmate prerequisites before installing anything.
+4. Verify provider authentication and repository access without exposing secrets.
+5. Create an isolated Firstmate code root on the selected captain only.
 6. Compare Herdr versions and plan normalization if required.

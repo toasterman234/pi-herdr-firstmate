@@ -43,8 +43,10 @@ Evaluate and, only after staged verification, operate a Firstmate fleet with an 
 - GitHub repository is published and the remote is verified. **Met: `gh repo view` and clean tracking status.**
 
 ## Phase 2 checks
-- [ ] Resolve exact Pi and Herdr binaries for each intended account.
-- [ ] Verify harmless `--version` and status commands through non-interactive SSH.
-- [ ] Inventory `jq`, `treehouse`, `tasks-axi`, Git, and Firstmate dependencies.
+- [x] Resolve exact Pi and Herdr binaries for each intended account where present.
+- [x] Verify harmless `--version` and Herdr status commands through non-interactive SSH.
+- [x] Inventory `jq`, `treehouse`, `tasks-axi`, Git, and GitHub CLI presence.
 - [ ] Verify repository access and provider authentication without exposing secrets.
-- [ ] Update the host readiness matrix with command evidence.
+- [x] Update the host readiness matrix with command evidence.
+- [ ] Resolve ZimaOS Pi launchability before provisioning a ZimaOS secondmate.
+- [ ] Determine whether `treehouse` and `tasks-axi` are mandatory Firstmate prerequisites.
