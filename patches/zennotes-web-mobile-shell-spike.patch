@@ -1,5 +1,49 @@
+diff --git a/apps/web/src/main.tsx b/apps/web/src/main.tsx
+--- a/apps/web/src/main.tsx
++++ b/apps/web/src/main.tsx
+@@ -1,4 +1,7 @@
+ import { renderZenNotesApp } from '@zennotes/app-core/main'
++// Exploratory web preview: mount actual ZenNotes iOS mobile chrome on the shared app core.
++import { mountMobileShell } from '/vercel/zennotesios/src/ui-mobile/MobileShell'
++import '/vercel/zennotesios/src/ui-mobile/mobile.css'
+ import { installBridge, webBasePath } from './bridge/http-bridge'
+ import { renderExportNoteWindow } from './export-window'
+ import { registerServiceWorker } from './register-service-worker'
+@@ -26,5 +29,6 @@
+   renderExportNoteWindow(root, exportNotePath)
+ } else {
+   renderZenNotesApp(root)
++  if (window.matchMedia('(max-width: 767px)').matches) mountMobileShell()
+ }
+ 
+diff --git a/apps/web/vite.config.ts b/apps/web/vite.config.ts
+--- a/apps/web/vite.config.ts
++++ b/apps/web/vite.config.ts
+@@ -243,10 +243,11 @@
+     // copy of React". Pin every React import to the single hoisted copy.
+     // electron-vite applies this for the desktop renderer by default; plain
+     // Vite does not, so we set it explicitly to keep web and desktop in parity.
+-    dedupe: ['react', 'react-dom']
++    dedupe: ['react', 'react-dom', '@zennotes/app-core', '@zennotes/shared-domain', '@zennotes/bridge-contract']
+   },
+   server: {
+     port: 5173,
++    fs: { allow: ['/vercel/zennotes', '/vercel/zennotesios'] },
+     proxy: {
+       '/api': {
+         target: 'http://127.0.0.1:7878',
+diff --git a/apps/web/tsconfig.json b/apps/web/tsconfig.json
+--- a/apps/web/tsconfig.json
++++ b/apps/web/tsconfig.json
+@@ -8,6 +8,7 @@
+     "noUnusedLocals": false,
+     "noUnusedParameters": false,
+     "noEmit": true,
++    "allowImportingTsExtensions": true,
+     "types": ["vite/client"],
+     "baseUrl": ".",
+     "paths": {
 diff --git a/apps/web/index.html b/apps/web/index.html
-index 7a2de61..309c9eb 100644
 --- a/apps/web/index.html
 +++ b/apps/web/index.html
 @@ -15,6 +15,22 @@
@@ -25,27 +69,3 @@ index 7a2de61..309c9eb 100644
      <title>ZenNotes</title>
    </head>
    <body>
-diff --git a/apps/web/src/main.tsx b/apps/web/src/main.tsx
-index b7080ce..0adb29a 100644
---- a/apps/web/src/main.tsx
-+++ b/apps/web/src/main.tsx
-@@ -1,4 +1,7 @@
- import { renderZenNotesApp } from '@zennotes/app-core/main'
-+// Exploratory web preview: mount actual ZenNotes iOS mobile chrome on the shared app core.
-+import { mountMobileShell } from '/vercel/zennotesios/src/ui-mobile/MobileShell'
-+import '/vercel/zennotesios/src/ui-mobile/mobile.css'
- import { installBridge, webBasePath } from './bridge/http-bridge'
- import { renderExportNoteWindow } from './export-window'
- import { registerServiceWorker } from './register-service-worker'
-@@ -26,4 +29,5 @@ if (exportNotePath) {
-   renderExportNoteWindow(root, exportNotePath)
- } else {
-   renderZenNotesApp(root)
-+  if (window.matchMedia('(max-width: 767px)').matches) mountMobileShell()
- }
-diff --git a/apps/web/tsconfig.json b/apps/web/tsconfig.json
-index eb0fa1d..e95dc96 100644
---- a/apps/web/tsconfig.json
-+++ b/apps/web/tsconfig.json
-@@ -8,6 +8,7 @@
-     "noUnusedLocal...[truncated]
