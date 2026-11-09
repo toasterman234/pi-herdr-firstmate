@@ -1,3 +1,30 @@
+diff --git a/apps/web/index.html b/apps/web/index.html
+index 7a2de61..309c9eb 100644
+--- a/apps/web/index.html
++++ b/apps/web/index.html
+@@ -15,6 +15,22 @@
+     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+     <link rel="apple-touch-icon" href="icon-192.png" />
+     <link rel="manifest" href="manifest.webmanifest" />
++    <!-- iOS-source preview: reproduce the mobile first-run preferences before the core store evaluates. -->
++    <script>
++      if (window.matchMedia('(max-width: 767px)').matches) {
++        try {
++          var key = 'zen:prefs:v2';
++          if (localStorage.getItem(key) == null) {
++            localStorage.setItem(key, JSON.stringify({
++              vimMode: false,
++              hasCompletedOnboarding: true,
++              themeId: 'dark-hard',
++              themeMode: 'dark'
++            }));
++          }
++        } catch (e) {}
++      }
++    </script>
+     <title>ZenNotes</title>
+   </head>
+   <body>
 diff --git a/apps/web/src/main.tsx b/apps/web/src/main.tsx
 index b7080ce..0adb29a 100644
 --- a/apps/web/src/main.tsx
@@ -21,27 +48,4 @@ index eb0fa1d..e95dc96 100644
 --- a/apps/web/tsconfig.json
 +++ b/apps/web/tsconfig.json
 @@ -8,6 +8,7 @@
-     "noUnusedLocals": false,
-     "noUnusedParameters": false,
-     "noEmit": true,
-+    "allowImportingTsExtensions": true,
-     "types": ["vite/client"],
-     "baseUrl": ".",
-     "paths": {
-diff --git a/apps/web/vite.config.ts b/apps/web/vite.config.ts
-index b3b0f0a..6f39814 100644
---- a/apps/web/vite.config.ts
-+++ b/apps/web/vite.config.ts
-@@ -243,10 +243,11 @@ export default defineConfig({
-     // copy of React". Pin every React import to the single hoisted copy.
-     // electron-vite applies this for the desktop renderer by default; plain
-     // Vite does not, so we set it explicitly to keep web and desktop in parity.
--    dedupe: ['react', 'react-dom']
-+    dedupe: ['react', 'react-dom', '@zennotes/app-core', '@zennotes/shared-domain', '@zennotes/bridge-contract']
-   },
-   server: {
-     port: 5173,
-+    fs: { allow: ['/vercel/zennotes', '/vercel/zennotesios'] },
-     proxy: {
-       '/api': {
-         target: 'http://127.0.0.1:7878',
+     "noUnusedLocal...[truncated]
