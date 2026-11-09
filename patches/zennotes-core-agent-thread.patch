@@ -1,8 +1,48 @@
+diff --git a/packages/app-core/src/components/EditorSelectionToolbar.tsx b/packages/app-core/src/components/EditorSelectionToolbar.tsx
+--- a/packages/app-core/src/components/EditorSelectionToolbar.tsx
++++ b/packages/app-core/src/components/EditorSelectionToolbar.tsx
+@@ -27,6 +27,7 @@
+   onWrap: (marker: string) => void
+   onLink: () => void
+   onComment: () => void
++  onAgentThread: () => void
+   /** "Turn into" — re-type the selected line(s) as a block. */
+   onBlockType: (type: BlockType) => void
+   /** Return focus to the editor (Escape / after acting via keyboard). */
+@@ -88,6 +89,7 @@
+   onWrap,
+   onLink,
+   onComment,
++  onAgentThread,
+   onBlockType,
+   onDismiss
+ }: Props): JSX.Element {
+@@ -324,6 +326,21 @@
+         >
+           <FeedbackIcon width={16} height={16} />
+         </button>
++        <button
++          ref={ref()}
++          data-toolbar-item
++          data-agent-thread-action
++          type="button"
++          title="Start an agent thread (draft only)"
++          aria-label="Start agent thread on selection"
++          className={BTN}
++          onMouseDown={keepSelection}
++          onMouseEnter={() => setHint({ label: 'Agent thread · draft' })}
++          onFocus={() => setHint({ label: 'Agent thread · draft' })}
++          onClick={onAgentThread}
++        >
++          <span className="text-xs font-semibold" aria-hidden="true">@</span>
++        </button>
+       </div>
+ 
+       {/* Footer: shows the active action's keyboard shortcut on the popup. */}
 diff --git a/packages/app-core/src/components/CommentsPanel.tsx b/packages/app-core/src/components/CommentsPanel.tsx
-index 7b80736..c0368c9 100644
 --- a/packages/app-core/src/components/CommentsPanel.tsx
 +++ b/packages/app-core/src/components/CommentsPanel.tsx
-@@ -37,6 +37,7 @@ interface Props {
+@@ -37,6 +37,7 @@
    fitWidth?: number
    note: NoteContent
    draft: CommentDraft | null
@@ -10,7 +50,7 @@ index 7b80736..c0368c9 100644
    onCaptureDraft: () => CommentDraft | null
    onClearDraft: () => void
    onJump: (comment: NoteComment) => void
-@@ -65,6 +66,7 @@ function isCommitShortcut(event: KeyboardEvent<HTMLTextAreaElement>): boolean {
+@@ -65,6 +66,7 @@
  export function CommentsPanel({
    note,
    draft,
@@ -18,24 +58,25 @@ index 7b80736..c0368c9 100644
    onCaptureDraft,
    onClearDraft,
    onJump,
-@@ -104,9 +106,11 @@ export function CommentsPanel({
+@@ -104,9 +106,11 @@
  
    useEffect(() => {
      if (!draft) return
+-    const raf = requestAnimationFrame(() => textareaRef.current?.focus())
+-    return () => cancelAnimationFrame(raf)
+-  }, [draft])
 +    // Keep agent requests as unsent comment drafts until the runtime is verified.
 +    if (prefill) setBody(prefill)
-     const raf = requestAnimationFrame(() => textareaRef.current?.focus())
-     return () => cancelAnimationFrame(raf)
--  }, [draft])
++    const raf = requestAnimationFrame(() => textareaRef.current?.focus())
++    return () => cancelAnimationFrame(raf)
 +  }, [draft, prefill])
  
    useEffect(() => {
      if (notePathRef.current === note.path) return
 diff --git a/packages/app-core/src/components/EditorPane.tsx b/packages/app-core/src/components/EditorPane.tsx
-index 4042aa6..f65c404 100644
 --- a/packages/app-core/src/components/EditorPane.tsx
 +++ b/packages/app-core/src/components/EditorPane.tsx
-@@ -1223,6 +1223,7 @@ export function EditorPane({ pane }: { pane: PaneLeaf }): JSX.Element {
+@@ -1223,6 +1223,7 @@
      return true
    }, [vaultSettings, content?.folder])
    const [commentDraft, setCommentDraft] = useState<CommentDraft | null>(null)
@@ -43,7 +84,52 @@ index 4042aa6..f65c404 100644
    const [selectionCommentAction, setSelectionCommentAction] =
      useState<SelectionCommentAction>(null)
    const [paneDropEdge, setPaneDropEdge] = useState<PaneEdge | null>(null)
-@@ -2076,6 +2077,7 @@ export function EditorPane({ pane }: { pane: PaneLeaf }): JSX.Element {
+@@ -2076,6 +2077,7 @@
    ])
  
-   const...[truncated]
+   const clearCommentDraft = useCallback((): void => {
++    setCommentPrefill('')
+     setCommentDraft(null)
+   }, [])
+ 
+@@ -2101,6 +2103,19 @@
+     return draft
+   }, [content, paneId, setActiveCommentId, setActivePane, setFocusedPanel])
+ 
++  const captureAgentThreadDraft = useCallback((): void => {
++    // Reuse ZenNotes' real anchored comment draft, never dispatch a terminal command.
++    setCommentPrefill('@pi ')
++    captureCommentDraft()
++  }, [captureCommentDraft])
++
++  // Mobile native toolbar can request the same anchored agent draft as web.
++  useEffect(() => {
++    if (!isActive) return
++    window.addEventListener('zen:add-agent-thread', captureAgentThreadDraft)
++    return () => window.removeEventListener('zen:add-agent-thread', captureAgentThreadDraft)
++  }, [isActive, captureAgentThreadDraft])
++
+   // `zen:add-comment` — keyboard shortcut (⌥⌘M) / palette command to start a
+   // comment on the current selection (or line) in the active pane, no mouse.
+   useEffect(() => {
+@@ -5099,6 +5114,7 @@
+             note={content}
+             fitWidth={sidePanelFit.widths.comments}
+             draft={commentDraft}
++            prefill={commentPrefill}
+             onCaptureDraft={captureCommentDraft}
+             onClearDraft={clearCommentDraft}
+             onJump={jumpToComment}
+@@ -5144,7 +5160,11 @@
+               const view = viewRef.current
+               if (view) wrapLink(view)
+             }}
+-            onComment={() => captureCommentDraft()}
++            onComment={() => {
++              setCommentPrefill('')
++              captureCommentDraft()
++            }}
++            onAgentThread={captureAgentThreadDraft}
+             onBlockType={(type) => {
+               const view = viewRef.current
+               if (view) setBlockType(view, type)
