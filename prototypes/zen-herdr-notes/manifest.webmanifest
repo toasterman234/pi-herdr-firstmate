@@ -1,0 +1,9 @@
+{
+  "name": "Notes · Herdr staging proof",
+  "short_name": "Notes",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fafaf8",
+  "theme_color": "#fafaf8",
+  "description": "Isolated staging proof for anchored notes threads; no live agent dispatch"
+}
