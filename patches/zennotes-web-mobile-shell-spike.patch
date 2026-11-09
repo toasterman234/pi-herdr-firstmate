@@ -1,0 +1,71 @@
+diff --git a/apps/web/src/main.tsx b/apps/web/src/main.tsx
+--- a/apps/web/src/main.tsx
++++ b/apps/web/src/main.tsx
+@@ -1,4 +1,7 @@
+ import { renderZenNotesApp } from '@zennotes/app-core/main'
++// Exploratory web preview: mount actual ZenNotes iOS mobile chrome on the shared app core.
++import { mountMobileShell } from '/vercel/zennotesios/src/ui-mobile/MobileShell'
++import '/vercel/zennotesios/src/ui-mobile/mobile.css'
+ import { installBridge, webBasePath } from './bridge/http-bridge'
+ import { renderExportNoteWindow } from './export-window'
+ import { registerServiceWorker } from './register-service-worker'
+@@ -26,5 +29,6 @@
+   renderExportNoteWindow(root, exportNotePath)
+ } else {
+   renderZenNotesApp(root)
++  if (window.matchMedia('(max-width: 767px)').matches) mountMobileShell()
+ }
+ 
+diff --git a/apps/web/vite.config.ts b/apps/web/vite.config.ts
+--- a/apps/web/vite.config.ts
++++ b/apps/web/vite.config.ts
+@@ -243,10 +243,11 @@
+     // copy of React". Pin every React import to the single hoisted copy.
+     // electron-vite applies this for the desktop renderer by default; plain
+     // Vite does not, so we set it explicitly to keep web and desktop in parity.
+-    dedupe: ['react', 'react-dom']
++    dedupe: ['react', 'react-dom', '@zennotes/app-core', '@zennotes/shared-domain', '@zennotes/bridge-contract']
+   },
+   server: {
+     port: 5173,
++    fs: { allow: ['/vercel/zennotes', '/vercel/zennotesios'] },
+     proxy: {
+       '/api': {
+         target: 'http://127.0.0.1:7878',
+diff --git a/apps/web/tsconfig.json b/apps/web/tsconfig.json
+--- a/apps/web/tsconfig.json
++++ b/apps/web/tsconfig.json
+@@ -8,6 +8,7 @@
+     "noUnusedLocals": false,
+     "noUnusedParameters": false,
+     "noEmit": true,
++    "allowImportingTsExtensions": true,
+     "types": ["vite/client"],
+     "baseUrl": ".",
+     "paths": {
+diff --git a/apps/web/index.html b/apps/web/index.html
+--- a/apps/web/index.html
++++ b/apps/web/index.html
+@@ -15,6 +15,22 @@
+     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+     <link rel="apple-touch-icon" href="icon-192.png" />
+     <link rel="manifest" href="manifest.webmanifest" />
++    <!-- iOS-source preview: reproduce the mobile first-run preferences before the core store evaluates. -->
++    <script>
++      if (window.matchMedia('(max-width: 767px)').matches) {
++        try {
++          var key = 'zen:prefs:v2';
++          if (localStorage.getItem(key) == null) {
++            localStorage.setItem(key, JSON.stringify({
++              vimMode: false,
++              hasCompletedOnboarding: true,
++              themeId: 'dark-hard',
++              themeMode: 'dark'
++            }));
++          }
++        } catch (e) {}
++      }
++    </script>
+     <title>ZenNotes</title>
+   </head>
+   <body>

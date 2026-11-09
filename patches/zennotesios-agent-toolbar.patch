@@ -1,0 +1,18 @@
+diff --git a/src/ui-mobile/EditorToolbar.tsx b/src/ui-mobile/EditorToolbar.tsx
+index 6da9e6c..eaf2a5b 100644
+--- a/src/ui-mobile/EditorToolbar.tsx
++++ b/src/ui-mobile/EditorToolbar.tsx
+@@ -94,6 +94,13 @@ const BUTTONS: ToolButton[] = [
+     d: 'M16 4H9a3 3 0 00-2.83 4M14 12a4 4 0 010 8H6M4 12h16',
+     run: () => runEditorCommand('toggle-strikethrough')
+   },
++  {
++    key: 'agent-thread',
++    label: 'Start agent thread',
++    glyph: '@',
++    d: '',
++    run: () => window.dispatchEvent(new Event('zen:add-agent-thread'))
++  },
+   {
+     key: 'highlight',
+     label: 'Highlight',
